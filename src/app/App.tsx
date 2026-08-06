@@ -729,6 +729,9 @@ export default function App() {
   const px = mouse.x * 24;
   const py = mouse.y * 10;
   const tilt = mouse.x * 14;
+  const productCheck = serial.trim() ? MOCK_DB[serial.trim().toUpperCase()] : undefined;
+  const productImageUrl = warrantyData?.imageUrl || productCheck?.imageUrl;
+  const productModel = warrantyData?.model || productCheck?.model || "Moxlite product";
 
   return (
     <div
@@ -944,7 +947,26 @@ export default function App() {
             transition: "transform 0.18s ease-out",
           }}
         >
-          <MovingHead tilt={tilt} phase={phase} />
+          <div
+            className="relative overflow-hidden rounded-[28px] border border-white/10 shadow-2xl"
+            style={{ width: 360, height: 360, minWidth: 360 }}
+          >
+            {productImageUrl ? (
+              <img
+                src={productImageUrl}
+                alt={productModel}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="flex items-center justify-center w-full h-full bg-slate-950/80 text-white/60 text-sm text-center px-4">
+                Photo preview will appear here when a valid product code is entered.
+              </div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
+            <div className="absolute left-4 top-4 px-3 py-1 rounded-full text-[11px] uppercase tracking-[0.2em] text-white/80 bg-black/30 backdrop-blur-sm">
+              {productImageUrl ? "Product preview" : "Awaiting SKU"}
+            </div>
+          </div>
         </div>
 
         {/* UI panel — overlaps lower fixture */}
