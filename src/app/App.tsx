@@ -10,24 +10,27 @@ interface WarrantyData {
   purchaseDate: string;
   expirationDate: string;
   dealer: string;
+  imageUrl?: string;
 }
 
 const MOCK_DB: Record<string, WarrantyData> = {
   "MXL-PRO-7042": {
-    model: "Moxlite MX-7000 Pro Beam",
+    model: "Moxlite Studio Basic",
     status: "Active",
     remaining: "2 years, 4 months",
     purchaseDate: "March 15, 2024",
     expirationDate: "March 15, 2027",
-    dealer: "Stage Craft Audio & Lighting — Los Angeles, CA",
+    dealer: "GMTGROUP.CO.ID — Jakarta, Indonesia",
+    imageUrl: "https://moxlite-web.is3.cloudhost.id/Side_9071_87dde27f26.png",
   },
   "MXL-TIT-1187": {
-    model: "Moxlite Titan 440 Spot",
-    status: "Active",
-    remaining: "8 months",
+    model: "Moxlite Amos Plus",
+    status: "Expired",
+    remaining: "Expired",
     purchaseDate: "November 2, 2023",
     expirationDate: "November 2, 2026",
-    dealer: "Pro Light Solutions — New York, NY",
+    dealer: "GMTGROUP.CO.ID — Jakarta, Indonesia",
+    imageUrl: "https://moxlite-web.is3.cloudhost.id/Artboard_16_d9dd19c44c.png",
   },
   "MXL-EVO-0291": {
     model: "Moxlite Evolution 300W Wash",
@@ -495,6 +498,7 @@ function WarrantyPanel({
   onReset: () => void;
 }) {
   const isActive = data.status === "Active";
+  const isExpired = data.status === "Expired";
   const verifiedDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -503,9 +507,9 @@ function WarrantyPanel({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28, scale: 0.97 }}
+      initial={{ opacity: 0, y: isExpired ? 38 : 28, scale: isExpired ? 0.94 : 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: isExpired ? 1.0 : 0.85, ease: [0.16, 1, 0.3, 1] }}
       className="relative"
     >
       <div
@@ -520,14 +524,31 @@ function WarrantyPanel({
             "0 40px 90px rgba(0,0,0,0.75), 0 0 90px rgba(59,130,246,0.1), inset 0 1px 0 rgba(255,255,255,0.08)",
         }}
       >
+        {data.imageUrl ? (
+          <div className="relative overflow-hidden w-full h-64 mb-6 rounded-[20px]">
+            <img
+              src={data.imageUrl}
+              alt={data.model}
+              className="w-full h-full object-cover"
+              style={{ display: "block" }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(180deg, rgba(4,4,12,0.2), rgba(4,4,12,0.85))",
+              }}
+            />
+          </div>
+        ) : null}
         {/* Holographic scan line */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
           <div
             className="absolute left-0 right-0 h-[1px]"
             style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(59,130,246,0.28), rgba(147,197,253,0.4), rgba(59,130,246,0.28), transparent)",
-              animation: "mox-scanline 4.5s linear infinite",
+              background: isExpired
+                ? "linear-gradient(90deg, transparent, rgba(239,68,68,0.22), rgba(252,165,165,0.35), rgba(239,68,68,0.22), transparent)"
+                : "linear-gradient(90deg, transparent, rgba(59,130,246,0.28), rgba(147,197,253,0.4), rgba(59,130,246,0.28), transparent)",
+              animation: isExpired ? "mox-scanline-expired 5.5s linear infinite" : "mox-scanline 4.5s linear infinite",
             }}
           />
         </div>
@@ -990,6 +1011,13 @@ export default function App() {
           4%   { opacity: 1; }
           96%  { opacity: 1; }
           100% { top: 100%;  opacity: 0; }
+        }
+        @keyframes mox-scanline-expired {
+          0%   { top: -4px;  opacity: 0; filter: blur(0); }
+          10%  { opacity: 1; filter: blur(0); }
+          45%  { top: 30%; opacity: 0.8; filter: blur(2px); }
+          70%  { top: 35%; opacity: 0.7; filter: blur(2px); }
+          100% { top: 100%; opacity: 0; filter: blur(3px); }
         }
         * { scrollbar-width: none; }
         *::-webkit-scrollbar { display: none; }
