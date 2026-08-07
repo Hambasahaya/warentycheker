@@ -472,15 +472,24 @@ function VerificationCard({
               )}
             </button>
 
-            <p
-              className="mt-4 text-center text-[11px]"
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                color: "rgba(255,255,255,0.18)",
-              }}
-            >
-              Try: MXL-PRO-7042 · MXL-TIT-1187
-            </p>
+            <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-white/30" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              <span>Try:</span>
+              <button
+                type="button"
+                onClick={() => setSerial("MXL-PRO-7042")}
+                className="hover:text-blue-400 underline decoration-dotted transition-colors cursor-pointer"
+              >
+                MXL-PRO-7042
+              </button>
+              <span>·</span>
+              <button
+                type="button"
+                onClick={() => setSerial("MXL-TIT-1187")}
+                className="hover:text-blue-400 underline decoration-dotted transition-colors cursor-pointer"
+              >
+                MXL-TIT-1187
+              </button>
+            </div>
           </>
         )}
       </div>
@@ -524,22 +533,7 @@ function WarrantyPanel({
             "0 40px 90px rgba(0,0,0,0.75), 0 0 90px rgba(59,130,246,0.1), inset 0 1px 0 rgba(255,255,255,0.08)",
         }}
       >
-        {data.imageUrl ? (
-          <div className="relative overflow-hidden w-full h-64 mb-6 rounded-[20px]">
-            <img
-              src={data.imageUrl}
-              alt={data.model}
-              className="w-full h-full object-cover"
-              style={{ display: "block" }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(180deg, rgba(4,4,12,0.2), rgba(4,4,12,0.85))",
-              }}
-            />
-          </div>
-        ) : null}
+
         {/* Holographic scan line */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[20px]">
           <div
@@ -729,9 +723,6 @@ export default function App() {
   const px = mouse.x * 24;
   const py = mouse.y * 10;
   const tilt = mouse.x * 14;
-  const productCheck = serial.trim() ? MOCK_DB[serial.trim().toUpperCase()] : undefined;
-  const productImageUrl = warrantyData?.imageUrl || productCheck?.imageUrl;
-  const productModel = warrantyData?.model || productCheck?.model || "Moxlite product";
 
   return (
     <div
@@ -935,39 +926,23 @@ export default function App() {
           )}
         </div>
 
-        {/* Spotlight with parallax */}
+        {/* Moving Head Light Fixture Graphic */}
         <div
-          className="relative"
+          className="relative flex items-center justify-center my-2"
           style={{
             transform: `translate(${px}px, ${py}px)`,
             transition: "transform 0.18s ease-out",
           }}
         >
-          <div
-            className="relative overflow-hidden rounded-[28px] border border-white/10 shadow-2xl"
-            style={{ width: 360, height: 360, minWidth: 360 }}
-          >
-            {productImageUrl ? (
-              <img
-                src={productImageUrl}
-                alt={productModel}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="flex items-center justify-center w-full h-full bg-slate-950/80 text-white/60 text-sm text-center px-4">
-                Photo preview will appear here when a valid product code is entered.
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
-          </div>
+          <MovingHead tilt={tilt} phase={phase} />
         </div>
 
         {/* UI panel — overlaps lower fixture */}
         <div
           className="w-full px-4"
           style={{
-            maxWidth: phase === "verified" ? "680px" : "380px",
-            marginTop: phase === "verified" ? "-120px" : "-180px",
+            maxWidth: phase === "verified" ? "640px" : "420px",
+            marginTop: phase === "verified" ? "-130px" : "-160px",
             transition: "max-width 0.5s ease, margin-top 0.5s ease",
           }}
         >
