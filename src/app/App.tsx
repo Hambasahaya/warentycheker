@@ -151,99 +151,41 @@ function Product3DShowcase({
               transform: "translateZ(55px)",
             }}
           >
-            {/* ── Light beam cone from the lamp nozzle ── */}
+            {/* ── Centered spotlight glow behind the lamp ── */}
             {isActive && (
-              <div className="absolute inset-0 pointer-events-none z-0" style={{ overflow: "visible" }}>
-                <svg
-                  viewBox="0 0 500 300"
-                  className="absolute"
+              <>
+                {/* Outer soft ambient glow */}
+                <div
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
                   style={{
-                    width: "700px",
-                    height: "420px",
-                    top: "-80px",
-                    left: "-320px",
-                    overflow: "visible",
+                    width: "280px",
+                    height: "280px",
+                    background: "radial-gradient(circle, rgba(59,130,246,0.25) 0%, rgba(6,182,212,0.1) 40%, transparent 70%)",
+                    filter: "blur(30px)",
+                    animation: "mox-pulse 3.5s ease-in-out infinite",
                   }}
-                >
-                  <defs>
-                    {/* Beam cone gradient — bright at nozzle (right side), fades to left */}
-                    <linearGradient id="beam-cone-lr" x1="100%" y1="50%" x2="0%" y2="50%">
-                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
-                      <stop offset="5%" stopColor="#bfdbfe" stopOpacity="0.6" />
-                      <stop offset="20%" stopColor="#60a5fa" stopOpacity="0.3" />
-                      <stop offset="45%" stopColor="#3b82f6" stopOpacity="0.12" />
-                      <stop offset="75%" stopColor="#1d4ed8" stopOpacity="0.04" />
-                      <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0" />
-                    </linearGradient>
-                    {/* Inner core beam gradient */}
-                    <linearGradient id="beam-core-lr" x1="100%" y1="50%" x2="0%" y2="50%">
-                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                      <stop offset="10%" stopColor="#e0f2fe" stopOpacity="0.55" />
-                      <stop offset="35%" stopColor="#93c5fd" stopOpacity="0.2" />
-                      <stop offset="70%" stopColor="#3b82f6" stopOpacity="0.06" />
-                      <stop offset="100%" stopColor="transparent" stopOpacity="0" />
-                    </linearGradient>
-                    <filter id="b-blur-wide"><feGaussianBlur stdDeviation="18" /></filter>
-                    <filter id="b-blur-mid"><feGaussianBlur stdDeviation="10" /></filter>
-                    <filter id="b-blur-tight"><feGaussianBlur stdDeviation="5" /></filter>
-                    <filter id="b-nozzle"><feGaussianBlur stdDeviation="6" /></filter>
-                  </defs>
-
-                  {/* Wide outer atmospheric cone — spreads from nozzle (right) to far left */}
-                  <polygon
-                    points="490,140 0,0 0,300"
-                    fill="url(#beam-cone-lr)"
-                    filter="url(#b-blur-wide)"
-                    opacity="0.5"
-                  />
-
-                  {/* Mid cone — sharper, brighter */}
-                  <polygon
-                    points="488,142 20,55 20,250"
-                    fill="url(#beam-cone-lr)"
-                    filter="url(#b-blur-mid)"
-                    opacity="0.45"
-                  />
-
-                  {/* Inner bright core cone */}
-                  <polygon
-                    points="486,144 60,100 60,200"
-                    fill="url(#beam-core-lr)"
-                    filter="url(#b-blur-mid)"
-                    opacity="0.4"
-                  />
-
-                  {/* Tight center beam core */}
-                  <polygon
-                    points="485,145 120,125 120,175"
-                    fill="url(#beam-core-lr)"
-                    filter="url(#b-blur-tight)"
-                    opacity="0.5"
-                  />
-
-                  {/* Nozzle hot-spot glow — positioned at the lamp lens (right side of SVG) */}
-                  <circle cx="490" cy="145" r="28" fill="#93c5fd" opacity="0.35" filter="url(#b-blur-wide)" />
-                  <circle cx="490" cy="145" r="14" fill="#bfdbfe" opacity="0.55" filter="url(#b-nozzle)" />
-                  <circle cx="490" cy="145" r="6" fill="#ffffff" opacity="0.85" filter="url(#b-blur-tight)" />
-                </svg>
-
-                {/* Animated dust/haze particles floating in beam path */}
-                {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-                  <div
-                    key={i}
-                    className="absolute rounded-full"
-                    style={{
-                      width: 1.5 + (i % 3),
-                      height: 1.5 + (i % 3),
-                      background: `rgba(147,197,253,${0.3 + (i % 4) * 0.1})`,
-                      left: `${-5 + i * 5}%`,
-                      top: `${38 + ((i * 11) % 24)}%`,
-                      animation: `mox-particle ${4 + i * 0.8}s ease-in-out infinite ${i * 0.6}s`,
-                      filter: "blur(0.5px)",
-                    }}
-                  />
-                ))}
-              </div>
+                />
+                {/* Mid bright glow */}
+                <div
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+                  style={{
+                    width: "160px",
+                    height: "160px",
+                    background: "radial-gradient(circle, rgba(147,197,253,0.5) 0%, rgba(59,130,246,0.2) 45%, transparent 75%)",
+                    filter: "blur(16px)",
+                  }}
+                />
+                {/* Core intense white hotspot */}
+                <div
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                    background: "radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(191,219,254,0.5) 40%, transparent 75%)",
+                    filter: "blur(8px)",
+                  }}
+                />
+              </>
             )}
 
             <img
@@ -252,7 +194,7 @@ function Product3DShowcase({
               className="relative z-20 max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
               style={{
                 filter: isActive
-                  ? "drop-shadow(0 5px 20px rgba(0,0,0,0.6))"
+                  ? "drop-shadow(0 0 25px rgba(96,165,250,0.6)) drop-shadow(0 5px 15px rgba(0,0,0,0.5))"
                   : "drop-shadow(0 10px 20px rgba(0,0,0,0.8)) grayscale(0.3) brightness(0.7)",
               }}
             />
