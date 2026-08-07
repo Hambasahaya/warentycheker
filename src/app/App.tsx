@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "motion/react";
+import studioBasicVideo from "../dari_gambar_ini_buatkan_menjad.mp4";
+import expiredVideo from "../expired.mp4";
 
 type Phase = "idle" | "verifying" | "verified" | "error";
 
@@ -11,6 +13,7 @@ interface WarrantyData {
   expirationDate: string;
   dealer: string;
   imageUrl?: string;
+  videoUrl?: string;
 }
 
 const MOCK_DB: Record<string, WarrantyData> = {
@@ -22,6 +25,7 @@ const MOCK_DB: Record<string, WarrantyData> = {
     expirationDate: "March 15, 2027",
     dealer: "GMTGROUP.CO.ID — Jakarta, Indonesia",
     imageUrl: "https://moxlite-web.is3.cloudhost.id/Side_9071_87dde27f26.png",
+    videoUrl: studioBasicVideo,
   },
   "MXL-TIT-1187": {
     model: "Moxlite Amos Plus",
@@ -31,6 +35,7 @@ const MOCK_DB: Record<string, WarrantyData> = {
     expirationDate: "November 2, 2026",
     dealer: "GMTGROUP.CO.ID — Jakarta, Indonesia",
     imageUrl: "https://moxlite-web.is3.cloudhost.id/Artboard_16_d9dd19c44c.png",
+    videoUrl: expiredVideo,
   },
   "MXL-EVO-0291": {
     model: "Moxlite Evolution 300W Wash",
@@ -97,11 +102,13 @@ function QRCodeSVG() {
 
 function Product3DShowcase({
   imageUrl,
+  videoUrl,
   model,
   mouse,
   status = "Active",
 }: {
-  imageUrl: string;
+  imageUrl?: string;
+  videoUrl?: string;
   model: string;
   mouse: { x: number; y: number };
   status?: "Active" | "Expired";
@@ -144,7 +151,7 @@ function Product3DShowcase({
             WebkitBackdropFilter: "blur(24px) saturate(1.2)",
           }}
         >
-          {/* Real Lamp Image */}
+          {/* Real Lamp Media Container */}
           <div
             className="relative z-10 w-full h-[200px] sm:h-[220px] flex items-center justify-center my-auto"
             style={{
@@ -188,16 +195,32 @@ function Product3DShowcase({
               </>
             )}
 
-            <img
-              src={imageUrl}
-              alt={model}
-              className="relative z-20 max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
-              style={{
-                filter: isActive
-                  ? "drop-shadow(0 0 25px rgba(96,165,250,0.6)) drop-shadow(0 5px 15px rgba(0,0,0,0.5))"
-                  : "drop-shadow(0 10px 20px rgba(0,0,0,0.8)) grayscale(0.3) brightness(0.7)",
-              }}
-            />
+            {videoUrl ? (
+              <video
+                src={videoUrl}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="relative z-20 max-w-full max-h-full object-contain rounded-2xl transition-transform duration-300 group-hover:scale-105"
+                style={{
+                  filter: isActive
+                    ? "drop-shadow(0 0 25px rgba(96,165,250,0.6)) drop-shadow(0 5px 15px rgba(0,0,0,0.5))"
+                    : "drop-shadow(0 10px 20px rgba(0,0,0,0.8)) grayscale(0.3) brightness(0.7)",
+                }}
+              />
+            ) : (
+              <img
+                src={imageUrl}
+                alt={model}
+                className="relative z-20 max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                style={{
+                  filter: isActive
+                    ? "drop-shadow(0 0 25px rgba(96,165,250,0.6)) drop-shadow(0 5px 15px rgba(0,0,0,0.5))"
+                    : "drop-shadow(0 10px 20px rgba(0,0,0,0.8)) grayscale(0.3) brightness(0.7)",
+                }}
+              />
+            )}
           </div>
 
           {/* Product Label */}
@@ -849,10 +872,11 @@ export default function App() {
           )}
         </div>
 
-        {/* 3D Real Product Showcase (Renders ONLY when verified & imageUrl exists) */}
-        {phase === "verified" && warrantyData?.imageUrl && (
+        {/* 3D Real Product Showcase (Renders ONLY when verified & media exists) */}
+        {phase === "verified" && (warrantyData?.imageUrl || warrantyData?.videoUrl) && (
           <Product3DShowcase
             imageUrl={warrantyData.imageUrl}
+            videoUrl={warrantyData.videoUrl}
             model={warrantyData.model}
             mouse={mouse}
             status={warrantyData.status}
