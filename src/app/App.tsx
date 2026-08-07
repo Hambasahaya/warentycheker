@@ -127,99 +127,133 @@ function Product3DShowcase({
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
         }}
       >
-        {/* Intense Volumetric Light Beam & Glow Effect for Active Status */}
-        {isActive ? (
-          <>
-            {/* Massive Outer Ambient Flare */}
-            <div
-              className="absolute -inset-24 rounded-full pointer-events-none filter blur-3xl opacity-90 animate-pulse"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(59,130,246,0.65) 0%, rgba(52,211,153,0.35) 40%, rgba(6,182,212,0.15) 65%, transparent 80%)",
-                animationDuration: "3s",
-              }}
-            />
-            {/* Core Intense White Lens Flare */}
-            <div
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 rounded-full pointer-events-none filter blur-xl opacity-95"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(147,197,253,0.9) 30%, rgba(59,130,246,0.4) 60%, transparent 80%)",
-              }}
-            />
-            {/* Horizontal Anamorphic Lens Flare Line */}
-            <div
-              className="absolute top-1/2 left-[-25%] right-[-25%] h-[3px] pointer-events-none -translate-y-1/2 filter blur-[1px] opacity-85"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent 0%, rgba(147,197,253,0.2) 20%, rgba(255,255,255,0.95) 50%, rgba(147,197,253,0.2) 80%, transparent 100%)",
-              }}
-            />
-          </>
-        ) : (
-          <div
-            className="absolute -inset-10 rounded-full pointer-events-none opacity-40 filter blur-2xl"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(239,68,68,0.25) 0%, transparent 70%)",
-            }}
-          />
-        )}
-
-        {/* 3D Transparent Glass Stage Card */}
+        {/* 3D Glass Stage Card */}
         <div
-          className="relative w-[320px] sm:w-[360px] h-[310px] sm:h-[340px] rounded-[32px] overflow-hidden p-6 flex flex-col items-center justify-between transition-all duration-500"
+          className="relative w-[320px] sm:w-[360px] h-[310px] sm:h-[340px] rounded-[32px] overflow-visible p-6 flex flex-col items-center justify-between transition-all duration-500"
           style={{
             background: isActive
-              ? "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(59,130,246,0.12) 40%, rgba(16,185,129,0.06) 100%)"
+              ? "linear-gradient(150deg, rgba(255,255,255,0.08) 0%, rgba(15,15,35,0.82) 60%, rgba(59,130,246,0.06) 100%)"
               : "linear-gradient(150deg, rgba(255,255,255,0.05) 0%, rgba(20,10,20,0.85) 60%, rgba(239,68,68,0.05) 100%)",
             border: isActive
-              ? "1px solid rgba(147,197,253,0.45)"
+              ? "1px solid rgba(147,197,253,0.3)"
               : "1px solid rgba(239,68,68,0.25)",
             boxShadow: isActive
-              ? "0 40px 100px rgba(59,130,246,0.45), inset 0 0 40px rgba(255,255,255,0.25), 0 0 70px rgba(52,211,153,0.3)"
+              ? "0 40px 90px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.15), 0 0 50px rgba(59,130,246,0.12)"
               : "0 30px 70px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.08)",
-            backdropFilter: isActive ? "blur(12px) saturate(1.8)" : "blur(24px)",
-            WebkitBackdropFilter: isActive ? "blur(12px) saturate(1.8)" : "blur(24px)",
+            backdropFilter: "blur(24px) saturate(1.2)",
+            WebkitBackdropFilter: "blur(24px) saturate(1.2)",
           }}
         >
-          {/* Active Status Badge */}
+          {/* Real Lamp Image */}
           <div
-            className={`px-3 py-1 rounded-full flex items-center gap-2 text-[10px] uppercase font-mono tracking-widest ${
-              isActive ? "text-emerald-300" : "text-red-400"
-            }`}
+            className="relative z-10 w-full h-[200px] sm:h-[220px] flex items-center justify-center my-auto"
             style={{
-              background: isActive ? "rgba(52,211,153,0.15)" : "rgba(239,68,68,0.15)",
-              border: isActive ? "1px solid rgba(52,211,153,0.35)" : "1px solid rgba(239,68,68,0.3)",
-              transform: "translateZ(30px)",
+              transform: "translateZ(55px)",
             }}
           >
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                isActive ? "bg-emerald-400 animate-ping" : "bg-red-400 animate-pulse"
-              }`}
-            />
-            {isActive ? "ACTIVE STAGE BEAM ON" : "WARRANTY EXPIRED"}
-          </div>
+            {/* ── Light beam cone from the lamp nozzle ── */}
+            {isActive && (
+              <div className="absolute inset-0 pointer-events-none" style={{ overflow: "visible" }}>
+                <svg
+                  viewBox="0 0 400 300"
+                  className="absolute"
+                  style={{
+                    width: "420px",
+                    height: "320px",
+                    top: "-30px",
+                    left: "-50px",
+                    overflow: "visible",
+                  }}
+                >
+                  <defs>
+                    {/* Cone gradient — bright at nozzle, fades outward */}
+                    <radialGradient id="beam-cone" cx="15%" cy="45%" r="85%" fx="15%" fy="45%">
+                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                      <stop offset="8%" stopColor="#bfdbfe" stopOpacity="0.75" />
+                      <stop offset="25%" stopColor="#60a5fa" stopOpacity="0.45" />
+                      <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.18" />
+                      <stop offset="80%" stopColor="#1d4ed8" stopOpacity="0.06" />
+                      <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0" />
+                    </radialGradient>
+                    {/* Volumetric beam linear */}
+                    <linearGradient id="beam-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.7" />
+                      <stop offset="15%" stopColor="#93c5fd" stopOpacity="0.4" />
+                      <stop offset="40%" stopColor="#3b82f6" stopOpacity="0.15" />
+                      <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0" />
+                    </linearGradient>
+                    <filter id="beam-blur">
+                      <feGaussianBlur stdDeviation="8" />
+                    </filter>
+                    <filter id="beam-blur-soft">
+                      <feGaussianBlur stdDeviation="14" />
+                    </filter>
+                    <filter id="nozzle-glow">
+                      <feGaussianBlur stdDeviation="5" />
+                    </filter>
+                  </defs>
 
-          {/* Real Lamp Image with Intense Brightness Beam Float */}
-          <div
-            className="relative z-10 w-full h-[190px] sm:h-[210px] flex items-center justify-center my-auto"
-            style={{
-              transform: "translateZ(60px)",
-              filter: isActive
-                ? "drop-shadow(0 0 35px rgba(96,165,250,0.95)) drop-shadow(0 0 70px rgba(52,211,153,0.6)) brightness(1.25)"
-                : "drop-shadow(0 15px 25px rgba(0,0,0,0.8)) grayscale(0.25) brightness(0.75)",
-            }}
-          >
+                  {/* Wide outer volumetric beam cone */}
+                  <polygon
+                    points="82,128 400,20 400,260"
+                    fill="url(#beam-cone)"
+                    filter="url(#beam-blur-soft)"
+                    opacity="0.6"
+                  />
+
+                  {/* Core sharp beam cone */}
+                  <polygon
+                    points="85,132 400,70 400,210"
+                    fill="url(#beam-fade)"
+                    filter="url(#beam-blur)"
+                    opacity="0.55"
+                  />
+
+                  {/* Inner bright core beam */}
+                  <polygon
+                    points="88,138 400,115 400,175"
+                    fill="url(#beam-fade)"
+                    filter="url(#beam-blur)"
+                    opacity="0.35"
+                  />
+
+                  {/* Hot spot at nozzle */}
+                  <circle cx="82" cy="135" r="14" fill="#ffffff" opacity="0.9" filter="url(#nozzle-glow)" />
+                  <circle cx="82" cy="135" r="7" fill="#ffffff" opacity="1" />
+                  <circle cx="82" cy="135" r="22" fill="#93c5fd" opacity="0.3" filter="url(#beam-blur)" />
+                </svg>
+
+                {/* Animated dust particles in beam */}
+                {[0, 1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className="absolute rounded-full bg-white/60"
+                    style={{
+                      width: 2 + (i % 3),
+                      height: 2 + (i % 3),
+                      left: `${25 + i * 12}%`,
+                      top: `${35 + (i * 7) % 30}%`,
+                      animation: `mox-particle ${3 + i * 0.7}s ease-in-out infinite ${i * 0.5}s`,
+                      filter: "blur(0.5px)",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
             <img
               src={imageUrl}
               alt={model}
-              className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              className="relative z-20 max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              style={{
+                filter: isActive
+                  ? "drop-shadow(0 5px 20px rgba(0,0,0,0.6))"
+                  : "drop-shadow(0 10px 20px rgba(0,0,0,0.8)) grayscale(0.3) brightness(0.7)",
+              }}
             />
           </div>
 
-          {/* Product Label inside 3D Card */}
+          {/* Product Label */}
           <div
             className="relative z-10 text-center"
             style={{ transform: "translateZ(35px)" }}
@@ -230,16 +264,16 @@ function Product3DShowcase({
                 isActive ? "text-emerald-300/90" : "text-red-400/80"
               }`}
             >
-              {isActive ? "Fully Operational · High Beam Active" : "Warranty Term Expired"}
+              {isActive ? "Warranty Active · Beam On" : "Warranty Expired"}
             </div>
           </div>
 
-          {/* Glossy Mirror Glare Overlay */}
+          {/* Glass glare overlay */}
           <div
-            className="absolute inset-0 pointer-events-none opacity-35"
+            className="absolute inset-0 pointer-events-none rounded-[32px] opacity-20"
             style={{
               background:
-                "linear-gradient(120deg, rgba(255,255,255,0.4) 0%, transparent 35%, transparent 65%, rgba(255,255,255,0.15) 100%)",
+                "linear-gradient(135deg, rgba(255,255,255,0.35) 0%, transparent 40%, transparent 70%, rgba(255,255,255,0.1) 100%)",
             }}
           />
         </div>
@@ -249,7 +283,7 @@ function Product3DShowcase({
           className="w-[260px] h-[18px] mx-auto mt-3 rounded-full filter blur-md opacity-80"
           style={{
             background: isActive
-              ? "radial-gradient(ellipse, rgba(59,130,246,0.6) 0%, rgba(0,0,0,0.9) 50%, transparent 80%)"
+              ? "radial-gradient(ellipse, rgba(59,130,246,0.4) 0%, rgba(0,0,0,0.8) 50%, transparent 80%)"
               : "radial-gradient(ellipse, rgba(0,0,0,0.95) 0%, transparent 80%)",
             transform: "translateZ(-30px)",
           }}
