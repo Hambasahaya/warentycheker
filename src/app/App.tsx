@@ -134,82 +134,69 @@ function Product3DShowcase({
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
         }}
       >
-        {/* 3D Glass Stage Card */}
         <div
-          className="relative w-[320px] sm:w-[360px] h-[310px] sm:h-[340px] rounded-[32px] overflow-visible p-6 flex flex-col items-center justify-between transition-all duration-500"
+          className="relative w-[320px] sm:w-[360px] h-[340px] sm:h-[380px] rounded-[32px] overflow-hidden p-6 flex flex-col justify-between transition-all duration-500"
           style={{
             background: isActive
               ? "linear-gradient(150deg, rgba(255,255,255,0.08) 0%, rgba(15,15,35,0.82) 60%, rgba(59,130,246,0.06) 100%)"
               : "linear-gradient(150deg, rgba(255,255,255,0.05) 0%, rgba(20,10,20,0.85) 60%, rgba(239,68,68,0.05) 100%)",
             border: isActive
-              ? "1px solid rgba(147,197,253,0.3)"
+              ? "1px solid rgba(147,197,253,0.35)"
               : "1px solid rgba(239,68,68,0.25)",
             boxShadow: isActive
-              ? "0 40px 90px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.15), 0 0 50px rgba(59,130,246,0.12)"
+              ? "0 40px 90px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.15), 0 0 50px rgba(59,130,246,0.18)"
               : "0 30px 70px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.08)",
             backdropFilter: "blur(24px) saturate(1.2)",
             WebkitBackdropFilter: "blur(24px) saturate(1.2)",
           }}
         >
-          {/* Real Lamp Media Container */}
-          <div
-            className="relative z-10 w-full h-[200px] sm:h-[220px] flex items-center justify-center my-auto"
-            style={{
-              transform: "translateZ(55px)",
-            }}
-          >
-            {/* ── Centered spotlight glow behind the lamp ── */}
-            {isActive && (
-              <>
-                {/* Outer soft ambient glow */}
-                <div
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-                  style={{
-                    width: "280px",
-                    height: "280px",
-                    background: "radial-gradient(circle, rgba(59,130,246,0.25) 0%, rgba(6,182,212,0.1) 40%, transparent 70%)",
-                    filter: "blur(30px)",
-                    animation: "mox-pulse 3.5s ease-in-out infinite",
-                  }}
-                />
-                {/* Mid bright glow */}
-                <div
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-                  style={{
-                    width: "160px",
-                    height: "160px",
-                    background: "radial-gradient(circle, rgba(147,197,253,0.5) 0%, rgba(59,130,246,0.2) 45%, transparent 75%)",
-                    filter: "blur(16px)",
-                  }}
-                />
-                {/* Core intense white hotspot */}
-                <div
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    background: "radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(191,219,254,0.5) 40%, transparent 75%)",
-                    filter: "blur(8px)",
-                  }}
-                />
-              </>
-            )}
+          {/* Full Frame Video or Image */}
+          {videoUrl ? (
+            <video
+              src={videoUrl}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover rounded-[32px]"
+              style={{
+                filter: isActive
+                  ? "brightness(1.05)"
+                  : "grayscale(0.3) brightness(0.7)",
+              }}
+            />
+          ) : (
+            <div
+              className="relative z-10 w-full h-[220px] flex items-center justify-center my-auto"
+              style={{
+                transform: "translateZ(55px)",
+              }}
+            >
+              {/* Centered spotlight glow behind static image */}
+              {isActive && (
+                <>
+                  <div
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+                    style={{
+                      width: "280px",
+                      height: "280px",
+                      background: "radial-gradient(circle, rgba(59,130,246,0.25) 0%, rgba(6,182,212,0.1) 40%, transparent 70%)",
+                      filter: "blur(30px)",
+                      animation: "mox-pulse 3.5s ease-in-out infinite",
+                    }}
+                  />
+                  <div
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      background: "radial-gradient(circle, rgba(147,197,253,0.5) 0%, rgba(59,130,246,0.2) 45%, transparent 75%)",
+                      filter: "blur(16px)",
+                    }}
+                  />
+                </>
+              )}
 
-            {videoUrl ? (
-              <video
-                src={videoUrl}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="relative z-20 max-w-full max-h-full object-contain rounded-2xl transition-transform duration-300 group-hover:scale-105"
-                style={{
-                  filter: isActive
-                    ? "drop-shadow(0 0 25px rgba(96,165,250,0.6)) drop-shadow(0 5px 15px rgba(0,0,0,0.5))"
-                    : "drop-shadow(0 10px 20px rgba(0,0,0,0.8)) grayscale(0.3) brightness(0.7)",
-                }}
-              />
-            ) : (
               <img
                 src={imageUrl}
                 alt={model}
@@ -220,30 +207,35 @@ function Product3DShowcase({
                     : "drop-shadow(0 10px 20px rgba(0,0,0,0.8)) grayscale(0.3) brightness(0.7)",
                 }}
               />
-            )}
-          </div>
+            </div>
+          )}
+
+          {/* Dark Gradient Scrim Overlay for video text readability */}
+          {videoUrl && (
+            <div className="absolute inset-0 pointer-events-none rounded-[32px] bg-gradient-to-t from-black/85 via-black/25 to-black/30 z-10" />
+          )}
 
           {/* Product Label */}
           <div
-            className="relative z-10 text-center"
+            className="relative z-20 text-center mt-auto pt-4"
             style={{ transform: "translateZ(35px)" }}
           >
-            <div className="text-white font-semibold text-base tracking-wide">{model}</div>
+            <div className="text-white font-semibold text-lg tracking-wide drop-shadow-md">{model}</div>
             <div
-              className={`text-[11px] font-mono mt-0.5 ${
-                isActive ? "text-emerald-300/90" : "text-red-400/80"
+              className={`text-xs font-mono mt-0.5 ${
+                isActive ? "text-emerald-300 drop-shadow-sm" : "text-red-400/90"
               }`}
             >
               {isActive ? "Warranty Active · Beam On" : "Warranty Expired"}
             </div>
           </div>
 
-          {/* Glass glare overlay */}
+          {/* Glossy Glass glare overlay */}
           <div
-            className="absolute inset-0 pointer-events-none rounded-[32px] opacity-20"
+            className="absolute inset-0 pointer-events-none rounded-[32px] opacity-25 z-20"
             style={{
               background:
-                "linear-gradient(135deg, rgba(255,255,255,0.35) 0%, transparent 40%, transparent 70%, rgba(255,255,255,0.1) 100%)",
+                "linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%, transparent 70%, rgba(255,255,255,0.1) 100%)",
             }}
           />
         </div>
