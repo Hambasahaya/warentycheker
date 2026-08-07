@@ -39,6 +39,7 @@ const MOCK_DB: Record<string, WarrantyData> = {
     purchaseDate: "January 8, 2022",
     expirationDate: "January 8, 2025",
     dealer: "Luminary Stage Equipment — Chicago, IL",
+    imageUrl: "https://moxlite-web.is3.cloudhost.id/Side_9071_87dde27f26.png",
   },
 };
 
@@ -94,238 +95,114 @@ function QRCodeSVG() {
   );
 }
 
-function MovingHead({ tilt, phase }: { tilt: number; phase: Phase }) {
-  const isActive = phase === "verifying" || phase === "verified";
-  const isVerified = phase === "verified";
-  const beamOpacity = isVerified ? 0.55 : isActive ? 0.4 : 0.22;
-  const glowRadius = isActive ? 40 : 18;
-  const glowOpacity = isActive ? 0.55 : 0.22;
+function Product3DShowcase({
+  imageUrl,
+  model,
+  mouse,
+}: {
+  imageUrl: string;
+  model: string;
+  mouse: { x: number; y: number };
+}) {
+  const rotateX = -mouse.y * 22;
+  const rotateY = mouse.x * 28;
 
   return (
-    <div
-      style={{
-        animation: "mox-float 7s ease-in-out infinite",
-        filter: `drop-shadow(0 0 ${glowRadius}px rgba(59,130,246,${glowOpacity}))`,
-        transition: "filter 1s ease",
-      }}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.88, y: 35 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.9, y: 20 }}
+      transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+      className="relative flex flex-col items-center justify-center my-6 z-20"
+      style={{ perspective: "1200px" }}
     >
-      <svg width="300" height="460" viewBox="0 0 300 460" style={{ overflow: "visible" }}>
-        <defs>
-          <linearGradient id="g-yoke" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1c1c3a" />
-            <stop offset="40%" stopColor="#2c2c50" />
-            <stop offset="60%" stopColor="#363660" />
-            <stop offset="100%" stopColor="#121226" />
-          </linearGradient>
-          <linearGradient id="g-body-top" x1="20%" y1="0%" x2="80%" y2="100%">
-            <stop offset="0%" stopColor="#22223e" />
-            <stop offset="50%" stopColor="#2a2a48" />
-            <stop offset="100%" stopColor="#0e0e20" />
-          </linearGradient>
-          <linearGradient id="g-body-side" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#101024" />
-            <stop offset="50%" stopColor="#1a1a34" />
-            <stop offset="100%" stopColor="#0c0c1c" />
-          </linearGradient>
-          <radialGradient id="g-lens" cx="42%" cy="38%" r="62%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.98" />
-            <stop offset="18%" stopColor={isVerified ? "#93c5fd" : "#bfdbfe"} stopOpacity="0.9" />
-            <stop offset="45%" stopColor={isVerified ? "#3b82f6" : "#60a5fa"} stopOpacity="0.75" />
-            <stop offset="75%" stopColor={isVerified ? "#1d4ed8" : "#2563eb"} stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="g-lens-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={isVerified ? "#3b82f6" : "#60a5fa"} stopOpacity={isActive ? 0.9 : 0.35} />
-            <stop offset="60%" stopColor="#1d4ed8" stopOpacity={isActive ? 0.3 : 0.08} />
-            <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0" />
-          </radialGradient>
-          <linearGradient id="g-beam" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={isVerified ? "#3b82f6" : "#60a5fa"} stopOpacity={beamOpacity} />
-            <stop offset="35%" stopColor={isVerified ? "#2563eb" : "#3b82f6"} stopOpacity={beamOpacity * 0.3} />
-            <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient id="g-beam-core" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity={isActive ? 0.12 : 0.04} />
-            <stop offset="100%" stopColor="#60a5fa" stopOpacity="0" />
-          </linearGradient>
-          <filter id="f-blur4"><feGaussianBlur stdDeviation="4" /></filter>
-          <filter id="f-blur10"><feGaussianBlur stdDeviation="10" /></filter>
-          <filter id="f-blur18"><feGaussianBlur stdDeviation="18" /></filter>
-        </defs>
+      {/* 3D Container with Parallax Tilt */}
+      <div
+        className="relative group cursor-pointer transition-transform duration-200 ease-out"
+        style={{
+          transformStyle: "preserve-3d",
+          transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+        }}
+      >
+        {/* Background Volumetric Glow */}
+        <div
+          className="absolute -inset-12 rounded-full pointer-events-none opacity-60 filter blur-3xl transition-opacity group-hover:opacity-90"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(59,130,246,0.4) 0%, rgba(6,182,212,0.18) 45%, transparent 75%)",
+          }}
+        />
 
-        {/* ── Beam of light ── */}
-        <g transform={`rotate(${tilt * 0.35}, 150, 300)`}>
-          <polygon
-            points="128,286 172,286 252,460 48,460"
-            fill="url(#g-beam)"
-            filter="url(#f-blur4)"
-          />
-          <polygon
-            points="140,286 160,286 192,460 108,460"
-            fill="url(#g-beam-core)"
-          />
-        </g>
-
-        {/* ── Yoke top mounting bar ── */}
-        <rect x="52" y="16" width="196" height="26" rx="8" fill="url(#g-yoke)" />
-        {/* Omega clamp detail */}
-        <rect x="108" y="10" width="84" height="14" rx="5" fill="#20203c" />
-        <rect x="128" y="6" width="44" height="10" rx="4" fill="#1a1a32" />
-        {/* Mounting bolts */}
-        <circle cx="88" cy="29" r="5.5" fill="#0c0c1e" stroke="#38386a" strokeWidth="1.5" />
-        <circle cx="88" cy="29" r="2" fill="#252545" />
-        <circle cx="212" cy="29" r="5.5" fill="#0c0c1e" stroke="#38386a" strokeWidth="1.5" />
-        <circle cx="212" cy="29" r="2" fill="#252545" />
-
-        {/* ── Left yoke arm ── */}
-        <rect x="60" y="38" width="24" height="146" rx="7" fill="url(#g-yoke)" />
-        {/* Left arm channel detail */}
-        <rect x="65" y="46" width="8" height="130" rx="3" fill="rgba(0,0,0,0.35)" />
-        {[58, 80, 102, 124, 146].map(y => (
-          <rect key={y} x="68" y={y} width="12" height="2.5" rx="1" fill="rgba(120,130,200,0.25)" />
-        ))}
-
-        {/* ── Right yoke arm ── */}
-        <rect x="216" y="38" width="24" height="146" rx="7" fill="url(#g-yoke)" />
-        <rect x="227" y="46" width="8" height="130" rx="3" fill="rgba(0,0,0,0.35)" />
-        {[58, 80, 102, 124, 146].map(y => (
-          <rect key={y} x="220" y={y} width="12" height="2.5" rx="1" fill="rgba(120,130,200,0.25)" />
-        ))}
-
-        {/* ── Pivot joints ── */}
-        <circle cx="72" cy="182" r="13" fill="#14142a" stroke="rgba(59,130,246,0.35)" strokeWidth="2" />
-        <circle cx="72" cy="182" r="6" fill="#20203c" />
-        <circle cx="72" cy="182" r="2.5" fill="#383858" />
-        <circle cx="228" cy="182" r="13" fill="#14142a" stroke="rgba(59,130,246,0.35)" strokeWidth="2" />
-        <circle cx="228" cy="182" r="6" fill="#20203c" />
-        <circle cx="228" cy="182" r="2.5" fill="#383858" />
-
-        {/* ── Head unit (tilts with mouse) ── */}
-        <g transform={`rotate(${tilt * 0.35}, 150, 182)`}>
-          {/* Back cap / top of head */}
-          <ellipse cx="150" cy="196" rx="72" ry="36" fill="url(#g-body-top)" />
-          <ellipse cx="150" cy="190" rx="65" ry="20" fill="rgba(50,50,90,0.4)" />
-
-          {/* Main barrel */}
-          <rect x="82" y="196" width="136" height="92" fill="#161630" />
-
-          {/* Left side panel */}
-          <rect x="82" y="196" width="20" height="92" fill="#101024" />
-          <rect x="84" y="200" width="16" height="84" rx="2" fill="url(#g-body-side)" />
-
-          {/* Right side panel */}
-          <rect x="198" y="196" width="20" height="92" fill="#1a1a36" />
-          <rect x="200" y="200" width="16" height="84" rx="2" fill="url(#g-body-side)" />
-
-          {/* Vent slats — left */}
-          {[210, 224, 238, 252, 266, 280].map(y => (
-            <rect key={y} x="88" y={y} width="12" height="5" rx="1.5" fill="#08081a" />
-          ))}
-          {/* Vent slats — right */}
-          {[210, 224, 238, 252, 266, 280].map(y => (
-            <rect key={y} x="200" y={y} width="12" height="5" rx="1.5" fill="#08081a" />
-          ))}
-
-          {/* Center body label area */}
-          <rect x="106" y="206" width="88" height="38" rx="5" fill="rgba(0,0,0,0.35)" />
-          <rect x="112" y="215" width="76" height="1.5" rx="1" fill="rgba(255,255,255,0.07)" />
-          <rect x="112" y="222" width="54" height="1.5" rx="1" fill="rgba(255,255,255,0.05)" />
-          <rect x="112" y="229" width="62" height="1.5" rx="1" fill="rgba(255,255,255,0.04)" />
-
-          {/* Moxlite logo mark on fixture */}
-          <text x="150" y="220" textAnchor="middle" fill="rgba(255,255,255,0.12)" fontSize="7" fontFamily="'Outfit',sans-serif" fontWeight="600" letterSpacing="3">
-            MOXLITE
-          </text>
-
-          {/* Status LED */}
-          <circle
-            cx="186"
-            cy="218"
-            r="3.5"
-            fill={phase === "verifying" ? "#fb923c" : phase === "verified" ? "#4ade80" : "#3b82f6"}
+        {/* 3D Glass Stage Card */}
+        <div
+          className="relative w-[320px] sm:w-[360px] h-[310px] sm:h-[340px] rounded-[32px] overflow-hidden p-6 flex flex-col items-center justify-between"
+          style={{
+            background:
+              "linear-gradient(150deg, rgba(255,255,255,0.09) 0%, rgba(15,15,35,0.85) 60%, rgba(59,130,246,0.08) 100%)",
+            border: "1px solid rgba(255,255,255,0.18)",
+            boxShadow:
+              "0 40px 90px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.2), 0 0 60px rgba(59,130,246,0.18)",
+            backdropFilter: "blur(24px) saturate(1.2)",
+            WebkitBackdropFilter: "blur(24px) saturate(1.2)",
+          }}
+        >
+          {/* Holographic Top Badge */}
+          <div
+            className="px-3.5 py-1 rounded-full flex items-center gap-2 text-[10px] uppercase font-mono tracking-widest text-blue-300"
             style={{
-              filter: `drop-shadow(0 0 5px ${phase === "verified" ? "#4ade80" : phase === "verifying" ? "#fb923c" : "#3b82f6"})`,
+              background: "rgba(59,130,246,0.14)",
+              border: "1px solid rgba(59,130,246,0.28)",
+              transform: "translateZ(30px)",
+            }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            3D Product Lighting Preview
+          </div>
+
+          {/* Real Lamp Image with 3D Float Depth */}
+          <div
+            className="relative z-10 w-full h-[200px] sm:h-[220px] flex items-center justify-center my-auto"
+            style={{
+              transform: "translateZ(55px)",
+              filter: "drop-shadow(0 25px 35px rgba(0,0,0,0.8))",
+            }}
+          >
+            <img
+              src={imageUrl}
+              alt={model}
+              className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
+
+          {/* Product Label inside 3D Card */}
+          <div
+            className="relative z-10 text-center"
+            style={{ transform: "translateZ(35px)" }}
+          >
+            <div className="text-white font-semibold text-base tracking-wide">{model}</div>
+            <div className="text-blue-400/80 text-[11px] font-mono mt-0.5">Authentic Stage Fixture</div>
+          </div>
+
+          {/* Dynamic Glare Reflection Overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-25"
+            style={{
+              background:
+                "linear-gradient(120deg, rgba(255,255,255,0.3) 0%, transparent 40%, transparent 65%, rgba(255,255,255,0.1) 100%)",
             }}
           />
+        </div>
 
-          {/* DMX connector area */}
-          <rect x="106" y="254" width="88" height="28" rx="4" fill="rgba(0,0,0,0.3)" />
-          {[0, 1, 2, 3, 4].map(i => (
-            <circle key={i} cx={116 + i * 16} cy="268" r="4" fill="#0c0c1e" stroke="#282848" strokeWidth="1.5" />
-          ))}
-
-          {/* Bottom barrel converging to lens */}
-          <path d="M82,288 Q82,302 98,306 L202,306 Q218,302 218,288 L218,288 Z" fill="#0e0e22" />
-
-          {/* Lens housing rings */}
-          <circle cx="150" cy="306" r="50" fill="#0a0a1e" />
-          <circle cx="150" cy="306" r="47" fill="#0c0c22" />
-          <circle cx="150" cy="306" r="44" fill="#0e0e26" />
-
-          {/* Gobo ring detail */}
-          <circle cx="150" cy="306" r="41" fill="none" stroke="#1e1e40" strokeWidth="3" />
-
-          {/* Lens glow (behind lens) */}
-          <circle cx="150" cy="306" r="38" fill="url(#g-lens-glow)" filter="url(#f-blur18)" />
-
-          {/* Lens glass */}
-          <circle cx="150" cy="306" r="35" fill="url(#g-lens)" />
-
-          {/* Lens inner optics */}
-          <circle cx="150" cy="306" r="30" fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="1" />
-          <circle cx="150" cy="306" r="22" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
-          <circle cx="150" cy="306" r="14" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-          <circle cx="150" cy="306" r="6" fill="rgba(255,255,255,0.6)" />
-          <circle cx="150" cy="306" r="3" fill="rgba(255,255,255,0.95)" />
-
-          {/* Lens surface highlight */}
-          <ellipse cx="138" cy="292" rx="12" ry="7" fill="rgba(255,255,255,0.22)" style={{ filter: "blur(4px)" }} />
-          <ellipse cx="160" cy="316" rx="6" ry="4" fill="rgba(100,160,255,0.12)" style={{ filter: "blur(3px)" }} />
-
-          {/* Outer lens trim */}
-          <circle cx="150" cy="306" r="43" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" />
-          <circle cx="150" cy="306" r="48" fill="none" stroke="rgba(59,130,246,0.12)" strokeWidth="1" />
-        </g>
-
-        {/* ── Scanning rings (verifying) ── */}
-        {phase === "verifying" && (
-          <>
-            <circle cx="150" cy="306" r="62" fill="none" stroke="rgba(59,130,246,0.3)" strokeWidth="1.5"
-              strokeDasharray="8 5"
-              style={{ animation: "mox-spin 3s linear infinite", transformOrigin: "150px 306px" }}
-            />
-            <circle cx="150" cy="306" r="82" fill="none" stroke="rgba(147,197,253,0.15)" strokeWidth="1"
-              strokeDasharray="5 9"
-              style={{ animation: "mox-spin 5s linear infinite reverse", transformOrigin: "150px 306px" }}
-            />
-            <circle cx="150" cy="306" r="104" fill="none" stroke="rgba(59,130,246,0.07)" strokeWidth="1"
-              strokeDasharray="3 11"
-              style={{ animation: "mox-spin 8s linear infinite", transformOrigin: "150px 306px" }}
-            />
-          </>
-        )}
-
-        {/* ── Verified rings ── */}
-        {phase === "verified" && (
-          <>
-            <circle cx="150" cy="306" r="62" fill="none" stroke="rgba(59,130,246,0.45)" strokeWidth="1.5"
-              strokeDasharray="5 4"
-              style={{ animation: "mox-spin 7s linear infinite", transformOrigin: "150px 306px" }}
-            />
-            <circle cx="150" cy="306" r="86" fill="none" stroke="rgba(52,211,153,0.2)" strokeWidth="1"
-              style={{ animation: "mox-spin 11s linear infinite reverse", transformOrigin: "150px 306px" }}
-            />
-            <circle cx="150" cy="306" r="108" fill="none" stroke="rgba(59,130,246,0.08)" strokeWidth="1"
-              strokeDasharray="2 8"
-              style={{ animation: "mox-spin 15s linear infinite", transformOrigin: "150px 306px" }}
-            />
-          </>
-        )}
-
-        {/* ── Stage floor reflection ── */}
-        <ellipse cx="150" cy="450" rx="55" ry="5" fill="rgba(59,130,246,0.08)" filter="url(#f-blur10)" />
-      </svg>
-    </div>
+        {/* 3D Floor Shadow */}
+        <div
+          className="w-[260px] h-[18px] mx-auto mt-3 rounded-full filter blur-md opacity-80"
+          style={{
+            background: "radial-gradient(ellipse, rgba(0,0,0,0.95) 0%, transparent 80%)",
+            transform: "translateZ(-30px)",
+          }}
+        />
+      </div>
+    </motion.div>
   );
 }
 
@@ -472,7 +349,7 @@ function VerificationCard({
               )}
             </button>
 
-            <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-white/30" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            <div className="mt-4 flex items-center justify-center gap-1.5 flex-wrap text-[11px] text-white/30" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
               <span>Try:</span>
               <button
                 type="button"
@@ -488,6 +365,14 @@ function VerificationCard({
                 className="hover:text-blue-400 underline decoration-dotted transition-colors cursor-pointer"
               >
                 MXL-TIT-1187
+              </button>
+              <span>·</span>
+              <button
+                type="button"
+                onClick={() => setSerial("MXL-EVO-0291")}
+                className="hover:text-blue-400 underline decoration-dotted transition-colors cursor-pointer"
+              >
+                MXL-EVO-0291
               </button>
             </div>
           </>
@@ -926,24 +811,20 @@ export default function App() {
           )}
         </div>
 
-        {/* Moving Head Light Fixture Graphic */}
-        <div
-          className="relative flex items-center justify-center my-2"
-          style={{
-            transform: `translate(${px}px, ${py}px)`,
-            transition: "transform 0.18s ease-out",
-          }}
-        >
-          <MovingHead tilt={tilt} phase={phase} />
-        </div>
+        {/* 3D Real Product Showcase (Renders ONLY when verified & imageUrl exists) */}
+        {phase === "verified" && warrantyData?.imageUrl && (
+          <Product3DShowcase
+            imageUrl={warrantyData.imageUrl}
+            model={warrantyData.model}
+            mouse={mouse}
+          />
+        )}
 
-        {/* UI panel — overlaps lower fixture */}
+        {/* UI panel */}
         <div
-          className="w-full px-4"
+          className="w-full px-4 my-6 transition-all duration-500 ease-out"
           style={{
             maxWidth: phase === "verified" ? "640px" : "420px",
-            marginTop: phase === "verified" ? "-130px" : "-160px",
-            transition: "max-width 0.5s ease, margin-top 0.5s ease",
           }}
         >
           {phase !== "verified" ? (
