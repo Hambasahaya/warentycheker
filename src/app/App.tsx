@@ -99,13 +99,16 @@ function Product3DShowcase({
   imageUrl,
   model,
   mouse,
+  status = "Active",
 }: {
   imageUrl: string;
   model: string;
   mouse: { x: number; y: number };
+  status?: "Active" | "Expired";
 }) {
   const rotateX = -mouse.y * 22;
   const rotateY = mouse.x * 28;
+  const isActive = status === "Active";
 
   return (
     <motion.div
@@ -124,47 +127,89 @@ function Product3DShowcase({
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
         }}
       >
-        {/* Background Volumetric Glow */}
-        <div
-          className="absolute -inset-12 rounded-full pointer-events-none opacity-60 filter blur-3xl transition-opacity group-hover:opacity-90"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(59,130,246,0.4) 0%, rgba(6,182,212,0.18) 45%, transparent 75%)",
-          }}
-        />
+        {/* Intense Volumetric Light Beam & Glow Effect for Active Status */}
+        {isActive ? (
+          <>
+            {/* Massive Outer Ambient Flare */}
+            <div
+              className="absolute -inset-24 rounded-full pointer-events-none filter blur-3xl opacity-90 animate-pulse"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(59,130,246,0.65) 0%, rgba(52,211,153,0.35) 40%, rgba(6,182,212,0.15) 65%, transparent 80%)",
+                animationDuration: "3s",
+              }}
+            />
+            {/* Core Intense White Lens Flare */}
+            <div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 rounded-full pointer-events-none filter blur-xl opacity-95"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(147,197,253,0.9) 30%, rgba(59,130,246,0.4) 60%, transparent 80%)",
+              }}
+            />
+            {/* Horizontal Anamorphic Lens Flare Line */}
+            <div
+              className="absolute top-1/2 left-[-25%] right-[-25%] h-[3px] pointer-events-none -translate-y-1/2 filter blur-[1px] opacity-85"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent 0%, rgba(147,197,253,0.2) 20%, rgba(255,255,255,0.95) 50%, rgba(147,197,253,0.2) 80%, transparent 100%)",
+              }}
+            />
+          </>
+        ) : (
+          <div
+            className="absolute -inset-10 rounded-full pointer-events-none opacity-40 filter blur-2xl"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(239,68,68,0.25) 0%, transparent 70%)",
+            }}
+          />
+        )}
 
-        {/* 3D Glass Stage Card */}
+        {/* 3D Transparent Glass Stage Card */}
         <div
-          className="relative w-[320px] sm:w-[360px] h-[310px] sm:h-[340px] rounded-[32px] overflow-hidden p-6 flex flex-col items-center justify-between"
+          className="relative w-[320px] sm:w-[360px] h-[310px] sm:h-[340px] rounded-[32px] overflow-hidden p-6 flex flex-col items-center justify-between transition-all duration-500"
           style={{
-            background:
-              "linear-gradient(150deg, rgba(255,255,255,0.09) 0%, rgba(15,15,35,0.85) 60%, rgba(59,130,246,0.08) 100%)",
-            border: "1px solid rgba(255,255,255,0.18)",
-            boxShadow:
-              "0 40px 90px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.2), 0 0 60px rgba(59,130,246,0.18)",
-            backdropFilter: "blur(24px) saturate(1.2)",
-            WebkitBackdropFilter: "blur(24px) saturate(1.2)",
+            background: isActive
+              ? "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(59,130,246,0.12) 40%, rgba(16,185,129,0.06) 100%)"
+              : "linear-gradient(150deg, rgba(255,255,255,0.05) 0%, rgba(20,10,20,0.85) 60%, rgba(239,68,68,0.05) 100%)",
+            border: isActive
+              ? "1px solid rgba(147,197,253,0.45)"
+              : "1px solid rgba(239,68,68,0.25)",
+            boxShadow: isActive
+              ? "0 40px 100px rgba(59,130,246,0.45), inset 0 0 40px rgba(255,255,255,0.25), 0 0 70px rgba(52,211,153,0.3)"
+              : "0 30px 70px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.08)",
+            backdropFilter: isActive ? "blur(12px) saturate(1.8)" : "blur(24px)",
+            WebkitBackdropFilter: isActive ? "blur(12px) saturate(1.8)" : "blur(24px)",
           }}
         >
-          {/* Holographic Top Badge */}
+          {/* Active Status Badge */}
           <div
-            className="px-3.5 py-1 rounded-full flex items-center gap-2 text-[10px] uppercase font-mono tracking-widest text-blue-300"
+            className={`px-3 py-1 rounded-full flex items-center gap-2 text-[10px] uppercase font-mono tracking-widest ${
+              isActive ? "text-emerald-300" : "text-red-400"
+            }`}
             style={{
-              background: "rgba(59,130,246,0.14)",
-              border: "1px solid rgba(59,130,246,0.28)",
+              background: isActive ? "rgba(52,211,153,0.15)" : "rgba(239,68,68,0.15)",
+              border: isActive ? "1px solid rgba(52,211,153,0.35)" : "1px solid rgba(239,68,68,0.3)",
               transform: "translateZ(30px)",
             }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            3D Product Lighting Preview
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                isActive ? "bg-emerald-400 animate-ping" : "bg-red-400 animate-pulse"
+              }`}
+            />
+            {isActive ? "ACTIVE STAGE BEAM ON" : "WARRANTY EXPIRED"}
           </div>
 
-          {/* Real Lamp Image with 3D Float Depth */}
+          {/* Real Lamp Image with Intense Brightness Beam Float */}
           <div
-            className="relative z-10 w-full h-[200px] sm:h-[220px] flex items-center justify-center my-auto"
+            className="relative z-10 w-full h-[190px] sm:h-[210px] flex items-center justify-center my-auto"
             style={{
-              transform: "translateZ(55px)",
-              filter: "drop-shadow(0 25px 35px rgba(0,0,0,0.8))",
+              transform: "translateZ(60px)",
+              filter: isActive
+                ? "drop-shadow(0 0 35px rgba(96,165,250,0.95)) drop-shadow(0 0 70px rgba(52,211,153,0.6)) brightness(1.25)"
+                : "drop-shadow(0 15px 25px rgba(0,0,0,0.8)) grayscale(0.25) brightness(0.75)",
             }}
           >
             <img
@@ -180,15 +225,21 @@ function Product3DShowcase({
             style={{ transform: "translateZ(35px)" }}
           >
             <div className="text-white font-semibold text-base tracking-wide">{model}</div>
-            <div className="text-blue-400/80 text-[11px] font-mono mt-0.5">Authentic Stage Fixture</div>
+            <div
+              className={`text-[11px] font-mono mt-0.5 ${
+                isActive ? "text-emerald-300/90" : "text-red-400/80"
+              }`}
+            >
+              {isActive ? "Fully Operational · High Beam Active" : "Warranty Term Expired"}
+            </div>
           </div>
 
-          {/* Dynamic Glare Reflection Overlay */}
+          {/* Glossy Mirror Glare Overlay */}
           <div
-            className="absolute inset-0 pointer-events-none opacity-25"
+            className="absolute inset-0 pointer-events-none opacity-35"
             style={{
               background:
-                "linear-gradient(120deg, rgba(255,255,255,0.3) 0%, transparent 40%, transparent 65%, rgba(255,255,255,0.1) 100%)",
+                "linear-gradient(120deg, rgba(255,255,255,0.4) 0%, transparent 35%, transparent 65%, rgba(255,255,255,0.15) 100%)",
             }}
           />
         </div>
@@ -197,7 +248,9 @@ function Product3DShowcase({
         <div
           className="w-[260px] h-[18px] mx-auto mt-3 rounded-full filter blur-md opacity-80"
           style={{
-            background: "radial-gradient(ellipse, rgba(0,0,0,0.95) 0%, transparent 80%)",
+            background: isActive
+              ? "radial-gradient(ellipse, rgba(59,130,246,0.6) 0%, rgba(0,0,0,0.9) 50%, transparent 80%)"
+              : "radial-gradient(ellipse, rgba(0,0,0,0.95) 0%, transparent 80%)",
             transform: "translateZ(-30px)",
           }}
         />
@@ -409,13 +462,17 @@ function WarrantyPanel({
       <div
         className="rounded-[20px] overflow-hidden relative"
         style={{
-          background:
-            "linear-gradient(160deg, rgba(59,130,246,0.09) 0%, rgba(14,14,32,0.85) 45%, rgba(6,182,212,0.05) 100%)",
-          border: "1px solid rgba(59,130,246,0.22)",
-          backdropFilter: "blur(28px) saturate(1.2)",
-          WebkitBackdropFilter: "blur(28px) saturate(1.2)",
-          boxShadow:
-            "0 40px 90px rgba(0,0,0,0.75), 0 0 90px rgba(59,130,246,0.1), inset 0 1px 0 rgba(255,255,255,0.08)",
+          background: isActive
+            ? "linear-gradient(160deg, rgba(255,255,255,0.1) 0%, rgba(59,130,246,0.12) 40%, rgba(16,185,129,0.06) 100%)"
+            : "linear-gradient(160deg, rgba(239,68,68,0.06) 0%, rgba(14,14,32,0.85) 45%, rgba(20,20,35,0.9) 100%)",
+          border: isActive
+            ? "1px solid rgba(147,197,253,0.4)"
+            : "1px solid rgba(239,68,68,0.25)",
+          backdropFilter: isActive ? "blur(14px) saturate(1.7)" : "blur(28px) saturate(1.2)",
+          WebkitBackdropFilter: isActive ? "blur(14px) saturate(1.7)" : "blur(28px) saturate(1.2)",
+          boxShadow: isActive
+            ? "0 40px 90px rgba(0,0,0,0.75), 0 0 80px rgba(59,130,246,0.35), 0 0 35px rgba(52,211,153,0.25), inset 0 1px 0 rgba(255,255,255,0.2)"
+            : "0 40px 90px rgba(0,0,0,0.75), 0 0 60px rgba(239,68,68,0.08)",
         }}
       >
 
@@ -817,6 +874,7 @@ export default function App() {
             imageUrl={warrantyData.imageUrl}
             model={warrantyData.model}
             mouse={mouse}
+            status={warrantyData.status}
           />
         )}
 
