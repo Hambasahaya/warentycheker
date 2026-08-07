@@ -897,20 +897,16 @@ export default function App() {
             style={{ textShadow: "0 0 100px rgba(59,130,246,0.2)" }}
           >
             {phase === "verified" ? (
-              <>
-                Product
-                <br />
-                <span
-                  className="font-semibold"
-                  style={{
-                    background: "linear-gradient(90deg, #60a5fa, #34d399)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  Authenticated
-                </span>
-              </>
+              <span
+                className="font-semibold"
+                style={{
+                  background: "linear-gradient(90deg, #60a5fa, #34d399)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Authenticated
+              </span>
             ) : (
               <>
                 Verify Your
@@ -923,7 +919,7 @@ export default function App() {
                     WebkitTextFillColor: "transparent",
                   }}
                 >
-                  Moxlite Product
+                  Warranty
                 </span>
               </>
             )}
@@ -964,7 +960,7 @@ export default function App() {
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
             <div className="absolute left-4 top-4 px-3 py-1 rounded-full text-[11px] uppercase tracking-[0.2em] text-white/80 bg-black/30 backdrop-blur-sm">
-              {productImageUrl ? "Product preview" : "Awaiting SKU"}
+              {productImageUrl ? "Preview" : "Awaiting SKU"}
             </div>
           </div>
         </div>
