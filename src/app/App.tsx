@@ -153,87 +153,92 @@ function Product3DShowcase({
           >
             {/* ── Light beam cone from the lamp nozzle ── */}
             {isActive && (
-              <div className="absolute inset-0 pointer-events-none" style={{ overflow: "visible" }}>
+              <div className="absolute inset-0 pointer-events-none z-0" style={{ overflow: "visible" }}>
                 <svg
-                  viewBox="0 0 400 300"
+                  viewBox="0 0 500 300"
                   className="absolute"
                   style={{
-                    width: "420px",
-                    height: "320px",
-                    top: "-30px",
-                    left: "-50px",
+                    width: "700px",
+                    height: "420px",
+                    top: "-80px",
+                    left: "-320px",
                     overflow: "visible",
                   }}
                 >
                   <defs>
-                    {/* Cone gradient — bright at nozzle, fades outward */}
-                    <radialGradient id="beam-cone" cx="15%" cy="45%" r="85%" fx="15%" fy="45%">
-                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                      <stop offset="8%" stopColor="#bfdbfe" stopOpacity="0.75" />
-                      <stop offset="25%" stopColor="#60a5fa" stopOpacity="0.45" />
-                      <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.18" />
-                      <stop offset="80%" stopColor="#1d4ed8" stopOpacity="0.06" />
+                    {/* Beam cone gradient — bright at nozzle (right side), fades to left */}
+                    <linearGradient id="beam-cone-lr" x1="100%" y1="50%" x2="0%" y2="50%">
+                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
+                      <stop offset="5%" stopColor="#bfdbfe" stopOpacity="0.6" />
+                      <stop offset="20%" stopColor="#60a5fa" stopOpacity="0.3" />
+                      <stop offset="45%" stopColor="#3b82f6" stopOpacity="0.12" />
+                      <stop offset="75%" stopColor="#1d4ed8" stopOpacity="0.04" />
                       <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0" />
-                    </radialGradient>
-                    {/* Volumetric beam linear */}
-                    <linearGradient id="beam-fade" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.7" />
-                      <stop offset="15%" stopColor="#93c5fd" stopOpacity="0.4" />
-                      <stop offset="40%" stopColor="#3b82f6" stopOpacity="0.15" />
-                      <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0" />
                     </linearGradient>
-                    <filter id="beam-blur">
-                      <feGaussianBlur stdDeviation="8" />
-                    </filter>
-                    <filter id="beam-blur-soft">
-                      <feGaussianBlur stdDeviation="14" />
-                    </filter>
-                    <filter id="nozzle-glow">
-                      <feGaussianBlur stdDeviation="5" />
-                    </filter>
+                    {/* Inner core beam gradient */}
+                    <linearGradient id="beam-core-lr" x1="100%" y1="50%" x2="0%" y2="50%">
+                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                      <stop offset="10%" stopColor="#e0f2fe" stopOpacity="0.55" />
+                      <stop offset="35%" stopColor="#93c5fd" stopOpacity="0.2" />
+                      <stop offset="70%" stopColor="#3b82f6" stopOpacity="0.06" />
+                      <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+                    </linearGradient>
+                    <filter id="b-blur-wide"><feGaussianBlur stdDeviation="18" /></filter>
+                    <filter id="b-blur-mid"><feGaussianBlur stdDeviation="10" /></filter>
+                    <filter id="b-blur-tight"><feGaussianBlur stdDeviation="5" /></filter>
+                    <filter id="b-nozzle"><feGaussianBlur stdDeviation="6" /></filter>
                   </defs>
 
-                  {/* Wide outer volumetric beam cone */}
+                  {/* Wide outer atmospheric cone — spreads from nozzle (right) to far left */}
                   <polygon
-                    points="82,128 400,20 400,260"
-                    fill="url(#beam-cone)"
-                    filter="url(#beam-blur-soft)"
-                    opacity="0.6"
+                    points="490,140 0,0 0,300"
+                    fill="url(#beam-cone-lr)"
+                    filter="url(#b-blur-wide)"
+                    opacity="0.5"
                   />
 
-                  {/* Core sharp beam cone */}
+                  {/* Mid cone — sharper, brighter */}
                   <polygon
-                    points="85,132 400,70 400,210"
-                    fill="url(#beam-fade)"
-                    filter="url(#beam-blur)"
-                    opacity="0.55"
+                    points="488,142 20,55 20,250"
+                    fill="url(#beam-cone-lr)"
+                    filter="url(#b-blur-mid)"
+                    opacity="0.45"
                   />
 
-                  {/* Inner bright core beam */}
+                  {/* Inner bright core cone */}
                   <polygon
-                    points="88,138 400,115 400,175"
-                    fill="url(#beam-fade)"
-                    filter="url(#beam-blur)"
-                    opacity="0.35"
+                    points="486,144 60,100 60,200"
+                    fill="url(#beam-core-lr)"
+                    filter="url(#b-blur-mid)"
+                    opacity="0.4"
                   />
 
-                  {/* Hot spot at nozzle */}
-                  <circle cx="82" cy="135" r="14" fill="#ffffff" opacity="0.9" filter="url(#nozzle-glow)" />
-                  <circle cx="82" cy="135" r="7" fill="#ffffff" opacity="1" />
-                  <circle cx="82" cy="135" r="22" fill="#93c5fd" opacity="0.3" filter="url(#beam-blur)" />
+                  {/* Tight center beam core */}
+                  <polygon
+                    points="485,145 120,125 120,175"
+                    fill="url(#beam-core-lr)"
+                    filter="url(#b-blur-tight)"
+                    opacity="0.5"
+                  />
+
+                  {/* Nozzle hot-spot glow — positioned at the lamp lens (right side of SVG) */}
+                  <circle cx="490" cy="145" r="28" fill="#93c5fd" opacity="0.35" filter="url(#b-blur-wide)" />
+                  <circle cx="490" cy="145" r="14" fill="#bfdbfe" opacity="0.55" filter="url(#b-nozzle)" />
+                  <circle cx="490" cy="145" r="6" fill="#ffffff" opacity="0.85" filter="url(#b-blur-tight)" />
                 </svg>
 
-                {/* Animated dust particles in beam */}
-                {[0, 1, 2, 3, 4, 5].map((i) => (
+                {/* Animated dust/haze particles floating in beam path */}
+                {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
                   <div
                     key={i}
-                    className="absolute rounded-full bg-white/60"
+                    className="absolute rounded-full"
                     style={{
-                      width: 2 + (i % 3),
-                      height: 2 + (i % 3),
-                      left: `${25 + i * 12}%`,
-                      top: `${35 + (i * 7) % 30}%`,
-                      animation: `mox-particle ${3 + i * 0.7}s ease-in-out infinite ${i * 0.5}s`,
+                      width: 1.5 + (i % 3),
+                      height: 1.5 + (i % 3),
+                      background: `rgba(147,197,253,${0.3 + (i % 4) * 0.1})`,
+                      left: `${-5 + i * 5}%`,
+                      top: `${38 + ((i * 11) % 24)}%`,
+                      animation: `mox-particle ${4 + i * 0.8}s ease-in-out infinite ${i * 0.6}s`,
                       filter: "blur(0.5px)",
                     }}
                   />
