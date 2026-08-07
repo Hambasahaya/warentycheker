@@ -947,17 +947,7 @@ export default function App() {
             className="relative overflow-hidden rounded-[28px] border border-white/10 shadow-2xl"
             style={{ width: 360, height: 360, minWidth: 360 }}
           >
-            {productImageUrl ? (
-              <img
-                src={productImageUrl}
-                alt={productModel}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="flex items-center justify-center w-full h-full bg-slate-950/80 text-white/60 text-sm text-center px-4">
-                Photo preview will appear here when a valid product code is entered.
-              </div>
-            )}
+            <div className="w-full h-full bg-slate-950/80" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
           </div>
         </div>
